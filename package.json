@@ -1,0 +1,20 @@
+{
+  "name": "ink",
+  "version": "0.0.1",
+  "description": "Minimal reactive library",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "jest",
+    "start": "parcel example/index.html --open"
+  },
+  "keywords": [
+    "framework",
+    "view",
+    "reactive",
+    "server",
+    "side",
+    "rendering"
+  ],
+  "author": "Joshua Amaju <princejosh0007@gmail.com>",
+  "license": "ISC"
+}
