@@ -1,25 +1,18 @@
-import Controller from './Controller'
-import { Block } from './types'
-import { invariant, query } from './utils'
+import Controller from "./Controller";
+import { Block, Options } from "./types";
+import { invariant, query } from "./utils";
 
-type Options = {
-  immediate: boolean
-}
-
-export function register (
+export function register(
   block: Block,
   domNode: string | HTMLElement,
   options?: Options
 ) {
-  const element = query(domNode)
-  const { immediate = true } = options ?? {}
+  const element = query(domNode);
 
-  invariant(!element, `element with selector ${domNode} not found`)
+  invariant(!element, `element with selector ${domNode} not found`);
 
-  const controller = new Controller(element, block)
-  controller.init()
-
-  if (immediate) controller.initRx()
+  const controller = new Controller(element, block);
+  controller.init();
 }
 
-export { Block }
+export { Block };

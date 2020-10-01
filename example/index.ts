@@ -3,6 +3,7 @@ import { register, Block } from "../src";
 const Text: Block = () => {
   return {
     value: "Hello",
+    dataId: 1,
   };
 };
 

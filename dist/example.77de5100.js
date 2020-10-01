@@ -312,12 +312,9 @@ var utils_1 = require("./utils");
 
 function register(block, domNode, options) {
   var element = utils_1.query(domNode);
-  var _a = (options !== null && options !== void 0 ? options : {}).immediate,
-      immediate = _a === void 0 ? true : _a;
   utils_1.invariant(!element, "element with selector " + domNode + " not found");
   var controller = new Controller_1.default(element, block);
   controller.init();
-  if (immediate) controller.initRx();
 }
 
 exports.register = register;
@@ -332,7 +329,8 @@ var src_1 = require("../src");
 
 var Text = function Text() {
   return {
-    value: "Hello"
+    value: "Hello",
+    dataId: 1
   };
 };
 
@@ -367,7 +365,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55729" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57475" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
