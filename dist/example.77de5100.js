@@ -117,13 +117,112 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"../src/utils.ts":[function(require,module,exports) {
+})({"../src/Data.ts":[function(require,module,exports) {
 "use strict";
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.invariant = exports.query = exports.is = exports.toKebabCase = void 0;
+
+var Data =
+/** @class */
+function () {
+  function Data(value) {
+    var _this = this;
+
+    this.listeners = [];
+
+    this.notifyListeners = function () {
+      _this.listeners.forEach(function (callback) {
+        return callback();
+      });
+    };
+
+    this.prev = __assign({}, value);
+    this.state = new Proxy(value, {
+      get: function get(target, prop) {
+        return target[prop];
+      },
+      set: function set(target, prop, value) {
+        var key = prop;
+        if (value === target[key]) return true;
+        _this.prev = __assign({}, target);
+        target[key] = value;
+
+        _this.notify();
+
+        return true;
+      }
+    });
+  }
+
+  Data.prototype.get = function () {
+    return this.state;
+  };
+
+  Data.prototype.getPrev = function () {
+    return this.prev;
+  };
+
+  Data.prototype.set = function (value) {
+    this.prev = __assign({}, this.state);
+    this.state = value;
+    this.notify();
+  };
+
+  Data.prototype.notify = function () {
+    if (this.raf) cancelAnimationFrame(this.raf);
+    this.raf = requestAnimationFrame(this.notifyListeners);
+  };
+
+  Data.prototype.subscribe = function (callback) {
+    var _this = this;
+
+    this.listeners.push(callback);
+    return {
+      unsubscribe: function unsubscribe() {
+        _this.listeners = _this.listeners.filter(function (fn) {
+          return fn === callback;
+        });
+      }
+    };
+  };
+
+  return Data;
+}();
+
+exports.default = Data;
+},{}],"../src/utils.ts":[function(require,module,exports) {
+"use strict";
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.invariant = exports.query = exports.is = exports.toCamelCase = exports.toKebabCase = void 0;
+
+var Data_1 = __importDefault(require("./Data"));
 
 function toKebabCase(str) {
   return str.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g).map(function (x) {
@@ -132,9 +231,23 @@ function toKebabCase(str) {
 }
 
 exports.toKebabCase = toKebabCase;
+
+function toCamelCase(str) {
+  return str.replace(/-./g, function (s) {
+    return s.toUpperCase()[1];
+  });
+}
+
+exports.toCamelCase = toCamelCase;
 exports.is = {
+  data: function data(val) {
+    return val instanceof Data_1.default;
+  },
   input: function input(el) {
     return el.nodeName === "INPUT";
+  },
+  obj: function obj(val) {
+    return Object.prototype.toString.call(val) === "[object Object]";
   }
 };
 
@@ -149,7 +262,7 @@ function invariant(cond, msg) {
 }
 
 exports.invariant = invariant;
-},{}],"../src/Controller.ts":[function(require,module,exports) {
+},{"./Data":"../src/Data.ts"}],"../src/Controller.ts":[function(require,module,exports) {
 "use strict";
 
 var __assign = this && this.__assign || function () {
@@ -187,8 +300,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var utils_1 = require("./utils");
 
+function get(value, key) {
+  return utils_1.is.obj(value) ? value[key] : value;
+}
+
 function partition(_props) {
-  var rx = {};
   var data = {};
   var props = {};
   var events = {};
@@ -207,7 +323,6 @@ function partition(_props) {
   }
 
   return {
-    rx: rx,
     data: data,
     props: props,
     events: events
@@ -220,15 +335,21 @@ function () {
   function Controller(domNode, block) {
     this.domNode = domNode;
     this.block = block;
+    this.subscriptions = [];
   }
 
   Controller.prototype.init = function () {
+    var _a, _b;
+
     var props = this.block(this.getAttributes());
     this.partitions = partition(props);
     this.processPartitions();
+    (_b = (_a = this.block).connected) === null || _b === void 0 ? void 0 : _b.call(_a);
+    var mutation = new MutationObserver(this.observer);
+    mutation.observe(this.domNode.parentNode, {
+      childList: true
+    });
   };
-
-  Controller.prototype.initRx = function () {};
 
   Controller.prototype.getAttributes = function () {
     var props = {};
@@ -238,13 +359,15 @@ function () {
       var _a = attrs[i],
           name = _a.name,
           value = _a.value;
-      props[name] = value;
+      props[utils_1.toCamelCase(name)] = value;
     }
 
     return props;
   };
 
   Controller.prototype.setValue = function (value) {
+    console.log(value);
+
     if (utils_1.is.input(this.domNode)) {
       this.domNode.value = value;
     } else {
@@ -252,7 +375,12 @@ function () {
     }
   };
 
+  Controller.prototype.throwStateError = function (key, state) {// invariant(!is.data(state), `${key} value should be a state object`);
+  };
+
   Controller.prototype.processPartitions = function () {
+    var _this = this;
+
     var _a = this.partitions,
         data = _a.data,
         props = _a.props,
@@ -262,10 +390,52 @@ function () {
         className = props.class,
         restProps = __rest(props, ["value", "class"]);
 
-    this.setValue(value);
+    if (value) {
+      var key_1 = value.key,
+          state_1 = value.state;
+      this.throwStateError(key_1, state_1);
+      var subscription = state_1.subscribe(function () {
+        _this.setValue(get(state_1.get(), key_1));
+      });
+      this.subscriptions.push(subscription);
+    }
 
-    for (var key in __assign(__assign({}, data), restProps)) {
-      this.domNode.setAttribute(key, data[key]);
+    if (className) {
+      var key_2 = className.key,
+          state_2 = className.state;
+      this.throwStateError(key_2, state_2);
+      var subscription = state_2.subscribe(function () {
+        var value = get(state_2.get(), key_2);
+        var prevValue = get(state_2.getPrev(), key_2);
+
+        _this.domNode.classList.remove(prevValue);
+
+        if (value) _this.domNode.classList.add(value);
+      });
+      this.subscriptions.push(subscription);
+    }
+
+    var _props = __assign(__assign({}, data), restProps);
+
+    if (_props) {
+      var _loop_1 = function _loop_1(key) {
+        var _a = _props[key],
+            _key = _a.key,
+            state = _a.state;
+        this_1.throwStateError(key, state);
+        var subscription = state.subscribe(function () {
+          var value = state.get()[_key];
+
+          _this.domNode.setAttribute(key, value);
+        });
+        this_1.subscriptions.push(subscription);
+      };
+
+      var this_1 = this;
+
+      for (var key in _props) {
+        _loop_1(key);
+      }
     }
 
     for (var key in events) {
@@ -273,17 +443,26 @@ function () {
     }
   };
 
+  Controller.prototype.destroy = function () {
+    this.subscriptions.forEach(function (sub) {
+      sub.unsubscribe();
+    });
+    this.partitions = null;
+    this.subscriptions = null;
+  };
+
+  Controller.prototype.observer = function (records) {
+    for (var _i = 0, records_1 = records; _i < records_1.length; _i++) {
+      var record = records_1[_i];
+      console.log(record.type, record.target, record.addedNodes, record.removedNodes);
+    }
+  };
+
   return Controller;
 }();
 
 exports.default = Controller;
-},{"./utils":"../src/utils.ts"}],"../src/types.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-},{}],"../src/index.ts":[function(require,module,exports) {
+},{"./utils":"../src/utils.ts"}],"../src/useData.ts":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -295,22 +474,91 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Block = exports.register = void 0;
+
+var Data_1 = __importDefault(require("./Data"));
+
+function useData(state) {
+  var get = {};
+  var data = new Data_1.default(state);
+
+  var _state = data.get();
+
+  var forceUpdate = function forceUpdate() {
+    for (var key in state) {
+      _state[key] = _state[key];
+    }
+  };
+
+  var map = function map(_a, callback) {
+    var key = _a.key,
+        state = _a.state;
+    var fauxState = new Data_1.default(_state);
+    Object.defineProperties(fauxState, {
+      get: {
+        value: function value() {
+          return callback(state.get()[key]);
+        }
+      },
+      getPrev: {
+        value: function value() {
+          return callback(state.getPrev()[key]);
+        }
+      }
+    });
+    state.subscribe(function () {
+      fauxState.set(state.get());
+    });
+    return {
+      key: key,
+      state: fauxState
+    };
+  };
+
+  for (var key in state) {
+    Object.defineProperty(get, key, {
+      value: {
+        key: key,
+        state: data
+      },
+      writable: false,
+      enumerable: false,
+      configurable: false
+    });
+    console.log("key: %s, value: %s", key, data);
+  }
+
+  return {
+    get: get,
+    map: map,
+    state: _state,
+    forceUpdate: forceUpdate
+  };
+}
+
+exports.default = useData;
+},{"./Data":"../src/Data.ts"}],"../src/index.ts":[function(require,module,exports) {
+"use strict";
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.useData = exports.map = exports.register = void 0;
 
 var Controller_1 = __importDefault(require("./Controller"));
 
-var types_1 = require("./types");
-
-Object.defineProperty(exports, "Block", {
-  enumerable: true,
-  get: function get() {
-    return types_1.Block;
-  }
-});
-
 var utils_1 = require("./utils");
 
-function register(block, domNode, options) {
+var useData_1 = __importDefault(require("./useData"));
+
+exports.useData = useData_1.default;
+
+function register(block, domNode) {
   var element = utils_1.query(domNode);
   utils_1.invariant(!element, "element with selector " + domNode + " not found");
   var controller = new Controller_1.default(element, block);
@@ -318,7 +566,11 @@ function register(block, domNode, options) {
 }
 
 exports.register = register;
-},{"./Controller":"../src/Controller.ts","./types":"../src/types.ts","./utils":"../src/utils.ts"}],"index.ts":[function(require,module,exports) {
+
+function map(data) {}
+
+exports.map = map;
+},{"./Controller":"../src/Controller.ts","./utils":"../src/utils.ts","./useData":"../src/useData.ts"}],"index.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -327,16 +579,37 @@ Object.defineProperty(exports, "__esModule", {
 
 var src_1 = require("../src");
 
-var Text = function Text() {
+var _a = src_1.useData({
+  radius: 10
+}),
+    map = _a.map,
+    state = _a.state,
+    radius = _a.get.radius;
+
+var Range = function Range() {
   return {
-    value: "Hello",
-    dataId: 1
+    onChange: function onChange(_a) {
+      var target = _a.target;
+      var value = target.value;
+      state.radius = parseFloat(value);
+    }
   };
 };
 
-src_1.register(Text, "h1", {
-  immediate: false
-});
+var Circle = function Circle() {
+  return {
+    r: radius
+  };
+};
+
+var blocks = {
+  circle: Circle,
+  input: Range
+};
+
+for (var key in blocks) {
+  src_1.register(blocks[key], key);
+}
 },{"../src":"../src/index.ts"}],"../../../../../AppData/Local/Yarn/Data/global/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -365,7 +638,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57475" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49719" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

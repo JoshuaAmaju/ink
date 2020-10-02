@@ -1,15 +1,18 @@
-import { Events, Props, Block, Properties } from "./types";
-import { is, toKebabCase } from "./utils";
+import Data from "./Data";
+import { Events, Props, Block, Properties, KeyedData } from "./types";
+import { invariant, is, toCamelCase, toKebabCase } from "./utils";
 
-type Partitions = {
+type Partitions<T = KeyedData> = {
   events: Events;
-  data: Props<string>;
-  props: Props<string>;
-  rx: Record<string, unknown>;
+  data: Props<T>;
+  props: Props<T>;
 };
 
+function get(value: any, key: string) {
+  return is.obj(value) ? value[key] : value;
+}
+
 function partition(_props: Partial<Properties>): Partitions {
-  const rx = {};
   const data = {};
   const props = {};
   const events = {};
@@ -27,11 +30,12 @@ function partition(_props: Partial<Properties>): Partitions {
     }
   }
 
-  return { rx, data, props, events };
+  return { data, props, events };
 }
 
 export default class Controller {
   private partitions: Partitions;
+  private subscriptions: ReturnType<Data["subscribe"]>[] = [];
 
   constructor(
     private readonly domNode: HTMLElement,
@@ -42,9 +46,15 @@ export default class Controller {
     const props = this.block(this.getAttributes());
     this.partitions = partition(props);
     this.processPartitions();
-  }
 
-  initRx() {}
+    this.block.connected?.();
+
+    const mutation = new MutationObserver(this.observer);
+
+    mutation.observe(this.domNode.parentNode, {
+      childList: true,
+    });
+  }
 
   private getAttributes(): Props<string> {
     const props = {};
@@ -52,13 +62,15 @@ export default class Controller {
 
     for (let i = 0; i < attrs.length; i++) {
       const { name, value } = attrs[i];
-      props[name] = value;
+      props[toCamelCase(name)] = value;
     }
 
     return props;
   }
 
   private setValue(value: any) {
+    console.log(value);
+
     if (is.input(this.domNode)) {
       this.domNode.value = value;
     } else {
@@ -66,19 +78,80 @@ export default class Controller {
     }
   }
 
+  private throwStateError(key: string, state: Data) {
+    // invariant(!is.data(state), `${key} value should be a state object`);
+  }
+
   private processPartitions() {
     const { data, props, events } = this.partitions;
 
     const { value, class: className, ...restProps } = props;
 
-    this.setValue(value);
+    if (value) {
+      const { key, state } = value;
+      this.throwStateError(key, state);
 
-    for (const key in { ...data, ...restProps }) {
-      this.domNode.setAttribute(key, data[key]);
+      const subscription = state.subscribe(() => {
+        this.setValue(get(state.get(), key));
+      });
+
+      this.subscriptions.push(subscription);
+    }
+
+    if (className) {
+      const { key, state } = className;
+      this.throwStateError(key, state);
+
+      const subscription = state.subscribe(() => {
+        const value = get(state.get(), key);
+        const prevValue = get(state.getPrev(), key);
+
+        this.domNode.classList.remove(prevValue);
+        if (value) this.domNode.classList.add(value);
+      });
+
+      this.subscriptions.push(subscription);
+    }
+
+    const _props = { ...data, ...restProps };
+
+    if (_props) {
+      for (const key in _props) {
+        const { key: _key, state } = _props[key];
+
+        this.throwStateError(key, state);
+
+        const subscription = state.subscribe(() => {
+          const value = state.get()[_key];
+          this.domNode.setAttribute(key, value);
+        });
+
+        this.subscriptions.push(subscription);
+      }
     }
 
     for (const key in events) {
       this.domNode.addEventListener(key, events[key]);
+    }
+  }
+
+  destroy() {
+    this.subscriptions.forEach((sub) => {
+      sub.unsubscribe();
+    });
+
+    this.partitions = null;
+    this.subscriptions = null;
+  }
+
+  private observer(records: MutationRecord[]) {
+    for (const record of records) {
+      console.log(
+        record.type,
+        record.target,
+        record.addedNodes,
+        record.removedNodes
+      );
     }
   }
 }

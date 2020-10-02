@@ -1,10 +1,31 @@
-import { register, Block } from "../src";
+import { register, Block, useData } from "../src";
 
-const Text: Block = () => {
+const {
+  map,
+  state,
+  get: { radius },
+} = useData({ radius: 10 });
+
+const Range: Block = () => {
   return {
-    value: "Hello",
-    dataId: 1,
+    onChange({ target }: Event) {
+      const value = (target as HTMLInputElement).value;
+      state.radius = parseFloat(value);
+    },
   };
 };
 
-register(Text, "h1", { immediate: false });
+const Circle: Block = () => {
+  return {
+    r: radius,
+  };
+};
+
+const blocks = {
+  circle: Circle,
+  input: Range,
+};
+
+for (const key in blocks) {
+  register(blocks[key], key);
+}
