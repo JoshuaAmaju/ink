@@ -220,7 +220,7 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.throwError = exports.query = exports.is = exports.toCamelCase = exports.toKebabCase = void 0;
+exports.throwError = exports.queryAll = exports.query = exports.is = exports.toCamelCase = exports.toKebabCase = void 0;
 
 var Data_1 = __importDefault(require("./Data"));
 
@@ -256,6 +256,12 @@ function query(selector) {
 }
 
 exports.query = query;
+
+function queryAll(selector) {
+  return Array.from(document.querySelectorAll(selector));
+}
+
+exports.queryAll = queryAll;
 
 function throwError(cond, msg) {
   if (cond) throw msg;
@@ -343,11 +349,7 @@ function () {
       for (var _i = 0, records_1 = records; _i < records_1.length; _i++) {
         var record = records_1[_i];
         record.removedNodes.forEach(function (node) {
-          var _a, _b;
-
           if (node === _this.domNode) {
-            (_b = (_a = _this.block).disconnected) === null || _b === void 0 ? void 0 : _b.call(_a);
-
             _this.destroy();
           }
         });
@@ -361,9 +363,10 @@ function () {
     var props = this.block(this.getAttributes());
     this.partitions = partition(props);
     this.processPartitions();
-    (_b = (_a = this.block).connected) === null || _b === void 0 ? void 0 : _b.call(_a);
-    var mutation = new MutationObserver(this.observer);
-    mutation.observe(this.domNode.parentNode, {
+    var callback = (_b = (_a = this.block).connected) === null || _b === void 0 ? void 0 : _b.call(_a);
+    if (callback) this.disconnectCallback = callback;
+    this.mutationObserver = new MutationObserver(this.observer);
+    this.mutationObserver.observe(this.domNode.parentNode, {
       childList: true
     });
   };
@@ -481,11 +484,16 @@ function () {
   };
 
   Controller.prototype.destroy = function () {
+    var _a, _b, _c;
+
     this.subscriptions.forEach(function (sub) {
       sub.unsubscribe();
     });
     this.partitions = null;
     this.subscriptions = null;
+    (_b = (_a = this.block).disconnected) === null || _b === void 0 ? void 0 : _b.call(_a);
+    (_c = this.disconnectCallback) === null || _c === void 0 ? void 0 : _c.call(this);
+    this.mutationObserver.disconnect();
   };
 
   return Controller;
@@ -578,7 +586,7 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.useData = exports.register = void 0;
+exports.useData = exports.queryAll = exports.query = exports.register = void 0;
 
 var Controller_1 = __importDefault(require("./Controller"));
 
@@ -587,6 +595,19 @@ var useData_1 = __importDefault(require("./useData"));
 exports.useData = useData_1.default;
 
 var utils_1 = require("./utils");
+
+Object.defineProperty(exports, "query", {
+  enumerable: true,
+  get: function get() {
+    return utils_1.query;
+  }
+});
+Object.defineProperty(exports, "queryAll", {
+  enumerable: true,
+  get: function get() {
+    return utils_1.queryAll;
+  }
+});
 
 function register(block, domNode) {
   var element = utils_1.query(domNode);

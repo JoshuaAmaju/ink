@@ -18,6 +18,6 @@ export type Properties<T = KeyedData> = {
 
 export interface Block {
   (props?: Props<string>): Partial<Properties>;
-  connected?: () => void;
   disconnected?: () => void;
+  connected?: () => void | VoidFunction;
 }

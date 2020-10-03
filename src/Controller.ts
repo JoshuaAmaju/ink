@@ -35,6 +35,8 @@ function partition(_props: Partial<Properties>): Partitions {
 
 export default class Controller {
   private partitions: Partitions;
+  private disconnectCallback: VoidFunction;
+  private mutationObserver: MutationObserver;
   private subscriptions: ReturnType<Data["subscribe"]>[] = [];
 
   constructor(
@@ -47,11 +49,13 @@ export default class Controller {
     this.partitions = partition(props);
     this.processPartitions();
 
-    this.block.connected?.();
+    const callback = this.block.connected?.();
 
-    const mutation = new MutationObserver(this.observer);
+    if (callback) this.disconnectCallback = callback;
 
-    mutation.observe(this.domNode.parentNode, {
+    this.mutationObserver = new MutationObserver(this.observer);
+
+    this.mutationObserver.observe(this.domNode.parentNode, {
       childList: true,
     });
   }
@@ -155,13 +159,16 @@ export default class Controller {
 
     this.partitions = null;
     this.subscriptions = null;
+
+    this.block.disconnected?.();
+    this.disconnectCallback?.();
+    this.mutationObserver.disconnect();
   }
 
   private observer = (records: MutationRecord[]) => {
     for (const record of records) {
       record.removedNodes.forEach((node) => {
         if (node === this.domNode) {
-          this.block.disconnected?.();
           this.destroy();
         }
       });
