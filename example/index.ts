@@ -18,6 +18,11 @@ const Range: Block = () => {
 const Circle: Block = () => {
   return {
     r: radius,
+    style: {
+      transform: map(radius, (r) => {
+        return `translateX(${r}px)`;
+      }),
+    },
   };
 };
 

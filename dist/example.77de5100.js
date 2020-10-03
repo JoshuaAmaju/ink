@@ -198,7 +198,7 @@ function () {
     return {
       unsubscribe: function unsubscribe() {
         _this.listeners = _this.listeners.filter(function (fn) {
-          return fn === callback;
+          return fn !== callback;
         });
       }
     };
@@ -333,9 +333,26 @@ var Controller =
 /** @class */
 function () {
   function Controller(domNode, block) {
+    var _this = this;
+
     this.domNode = domNode;
     this.block = block;
     this.subscriptions = [];
+
+    this.observer = function (records) {
+      for (var _i = 0, records_1 = records; _i < records_1.length; _i++) {
+        var record = records_1[_i];
+        record.removedNodes.forEach(function (node) {
+          var _a, _b;
+
+          if (node === _this.domNode) {
+            (_b = (_a = _this.block).disconnected) === null || _b === void 0 ? void 0 : _b.call(_a);
+
+            _this.destroy();
+          }
+        });
+      }
+    };
   }
 
   Controller.prototype.init = function () {
@@ -366,8 +383,6 @@ function () {
   };
 
   Controller.prototype.setValue = function (value) {
-    console.log(value);
-
     if (utils_1.is.input(this.domNode)) {
       this.domNode.value = value;
     } else {
@@ -375,7 +390,8 @@ function () {
     }
   };
 
-  Controller.prototype.throwStateError = function (key, state) {// invariant(!is.data(state), `${key} value should be a state object`);
+  Controller.prototype.throwStateError = function (key, state) {
+    utils_1.invariant(!utils_1.is.data(state), key + " value should be a state object");
   };
 
   Controller.prototype.processPartitions = function () {
@@ -387,8 +403,9 @@ function () {
         events = _a.events;
 
     var value = props.value,
+        style = props.style,
         className = props.class,
-        restProps = __rest(props, ["value", "class"]);
+        restProps = __rest(props, ["value", "style", "class"]);
 
     if (value) {
       var key_1 = value.key,
@@ -415,26 +432,46 @@ function () {
       this.subscriptions.push(subscription);
     }
 
-    var _props = __assign(__assign({}, data), restProps);
-
-    if (_props) {
+    if (style) {
       var _loop_1 = function _loop_1(key) {
-        var _a = _props[key],
+        var _a = style[key],
             _key = _a.key,
             state = _a.state;
         this_1.throwStateError(key, state);
         var subscription = state.subscribe(function () {
-          var value = state.get()[_key];
-
-          _this.domNode.setAttribute(key, value);
+          var value = get(state.get(), _key);
+          _this.domNode.style[key] = value;
         });
         this_1.subscriptions.push(subscription);
       };
 
       var this_1 = this;
 
-      for (var key in _props) {
+      for (var key in style) {
         _loop_1(key);
+      }
+    }
+
+    var _props = __assign(__assign({}, data), restProps);
+
+    if (_props) {
+      var _loop_2 = function _loop_2(key) {
+        var _a = _props[key],
+            _key = _a.key,
+            state = _a.state;
+        this_2.throwStateError(key, state);
+        var subscription = state.subscribe(function () {
+          var value = get(state.get(), _key);
+
+          _this.domNode.setAttribute(key, value);
+        });
+        this_2.subscriptions.push(subscription);
+      };
+
+      var this_2 = this;
+
+      for (var key in _props) {
+        _loop_2(key);
       }
     }
 
@@ -449,13 +486,6 @@ function () {
     });
     this.partitions = null;
     this.subscriptions = null;
-  };
-
-  Controller.prototype.observer = function (records) {
-    for (var _i = 0, records_1 = records; _i < records_1.length; _i++) {
-      var record = records_1[_i];
-      console.log(record.type, record.target, record.addedNodes, record.removedNodes);
-    }
   };
 
   return Controller;
@@ -524,12 +554,12 @@ function useData(state) {
       enumerable: false,
       configurable: false
     });
-    console.log("key: %s, value: %s", key, data);
   }
 
   return {
     get: get,
     map: map,
+    data: data,
     state: _state,
     forceUpdate: forceUpdate
   };
@@ -598,7 +628,12 @@ var Range = function Range() {
 
 var Circle = function Circle() {
   return {
-    r: radius
+    r: radius,
+    style: {
+      transform: map(radius, function (r) {
+        return "translateX(" + r + "px)";
+      })
+    }
   };
 };
 
@@ -638,7 +673,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49719" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60939" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

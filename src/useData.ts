@@ -1,8 +1,9 @@
 import Data from "./Data";
 import { KeyedData, Props } from "./types";
 
-type UseData<T, P extends keyof T> = {
+type UseData<T extends Props, P extends keyof T> = {
   state: T;
+  data: Data<T>;
   forceUpdate: VoidFunction;
   get: Record<P, KeyedData>;
   map: (value: KeyedData, fn: (v: T[P]) => unknown) => KeyedData;
@@ -55,9 +56,7 @@ export default function useData<T extends Props, P extends keyof T>(
       enumerable: false,
       configurable: false,
     });
-
-    console.log("key: %s, value: %s", key, data);
   }
 
-  return { get, map, state: _state, forceUpdate };
+  return { get, map, data, state: _state, forceUpdate };
 }

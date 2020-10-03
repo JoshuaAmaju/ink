@@ -9,12 +9,12 @@ export type KeyedData = {
   key: string;
 };
 
-export type Properties<T = KeyedData> = { value: T; class: T } & Events &
+export type Properties<T = KeyedData> = {
+  value: T;
+  class: T;
+  style: Props<KeyedData>;
+} & Events &
   Props<T>;
-
-export type Options = {
-  immediate: boolean;
-};
 
 export interface Block {
   (props?: Props<string>): Partial<Properties>;

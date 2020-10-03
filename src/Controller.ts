@@ -69,8 +69,6 @@ export default class Controller {
   }
 
   private setValue(value: any) {
-    console.log(value);
-
     if (is.input(this.domNode)) {
       this.domNode.value = value;
     } else {
@@ -79,13 +77,13 @@ export default class Controller {
   }
 
   private throwStateError(key: string, state: Data) {
-    // invariant(!is.data(state), `${key} value should be a state object`);
+    invariant(!is.data(state), `${key} value should be a state object`);
   }
 
   private processPartitions() {
     const { data, props, events } = this.partitions;
 
-    const { value, class: className, ...restProps } = props;
+    const { value, style, class: className, ...restProps } = props;
 
     if (value) {
       const { key, state } = value;
@@ -113,6 +111,21 @@ export default class Controller {
       this.subscriptions.push(subscription);
     }
 
+    if (style) {
+      for (const key in style) {
+        const { key: _key, state } = style[key];
+
+        this.throwStateError(key, state);
+
+        const subscription = state.subscribe(() => {
+          const value = get(state.get(), _key);
+          this.domNode.style[key] = value;
+        });
+
+        this.subscriptions.push(subscription);
+      }
+    }
+
     const _props = { ...data, ...restProps };
 
     if (_props) {
@@ -122,7 +135,7 @@ export default class Controller {
         this.throwStateError(key, state);
 
         const subscription = state.subscribe(() => {
-          const value = state.get()[_key];
+          const value = get(state.get(), _key);
           this.domNode.setAttribute(key, value);
         });
 
@@ -144,14 +157,14 @@ export default class Controller {
     this.subscriptions = null;
   }
 
-  private observer(records: MutationRecord[]) {
+  private observer = (records: MutationRecord[]) => {
     for (const record of records) {
-      console.log(
-        record.type,
-        record.target,
-        record.addedNodes,
-        record.removedNodes
-      );
+      record.removedNodes.forEach((node) => {
+        if (node === this.domNode) {
+          this.block.disconnected?.();
+          this.destroy();
+        }
+      });
     }
-  }
+  };
 }

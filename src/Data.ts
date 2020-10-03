@@ -56,7 +56,7 @@ export default class Data<T extends Props = {}> {
 
     return {
       unsubscribe: () => {
-        this.listeners = this.listeners.filter((fn) => fn === callback);
+        this.listeners = this.listeners.filter((fn) => fn !== callback);
       },
     };
   }
