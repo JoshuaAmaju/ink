@@ -29,6 +29,10 @@ export function query(selector: string | HTMLElement): HTMLElement {
     : selector;
 }
 
-export function invariant(cond: boolean, msg: string) {
+export function queryAll<T extends HTMLElement>(selector: string): T[] {
+  return Array.from(document.querySelectorAll(selector));
+}
+
+export function throwError(cond: boolean, msg: string) {
   if (cond) throw msg;
 }

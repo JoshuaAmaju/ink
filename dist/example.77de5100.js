@@ -220,7 +220,7 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.invariant = exports.query = exports.is = exports.toCamelCase = exports.toKebabCase = void 0;
+exports.throwError = exports.query = exports.is = exports.toCamelCase = exports.toKebabCase = void 0;
 
 var Data_1 = __importDefault(require("./Data"));
 
@@ -257,11 +257,11 @@ function query(selector) {
 
 exports.query = query;
 
-function invariant(cond, msg) {
+function throwError(cond, msg) {
   if (cond) throw msg;
 }
 
-exports.invariant = invariant;
+exports.throwError = throwError;
 },{"./Data":"../src/Data.ts"}],"../src/Controller.ts":[function(require,module,exports) {
 "use strict";
 
@@ -391,7 +391,7 @@ function () {
   };
 
   Controller.prototype.throwStateError = function (key, state) {
-    utils_1.invariant(!utils_1.is.data(state), key + " value should be a state object");
+    utils_1.throwError(!utils_1.is.data(state), key + " value should be a state object");
   };
 
   Controller.prototype.processPartitions = function () {
@@ -578,29 +578,28 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.useData = exports.map = exports.register = void 0;
+exports.useData = exports.register = void 0;
 
 var Controller_1 = __importDefault(require("./Controller"));
-
-var utils_1 = require("./utils");
 
 var useData_1 = __importDefault(require("./useData"));
 
 exports.useData = useData_1.default;
 
+var utils_1 = require("./utils");
+
 function register(block, domNode) {
   var element = utils_1.query(domNode);
-  utils_1.invariant(!element, "element with selector " + domNode + " not found");
+  utils_1.throwError(!element, "element with selector " + domNode + " not found");
   var controller = new Controller_1.default(element, block);
   controller.init();
+  return function () {
+    return controller.destroy();
+  };
 }
 
 exports.register = register;
-
-function map(data) {}
-
-exports.map = map;
-},{"./Controller":"../src/Controller.ts","./utils":"../src/utils.ts","./useData":"../src/useData.ts"}],"index.ts":[function(require,module,exports) {
+},{"./Controller":"../src/Controller.ts","./useData":"../src/useData.ts","./utils":"../src/utils.ts"}],"index.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

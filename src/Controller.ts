@@ -1,6 +1,6 @@
 import Data from "./Data";
 import { Events, Props, Block, Properties, KeyedData } from "./types";
-import { invariant, is, toCamelCase, toKebabCase } from "./utils";
+import { throwError, is, toCamelCase, toKebabCase } from "./utils";
 
 type Partitions<T = KeyedData> = {
   events: Events;
@@ -77,7 +77,7 @@ export default class Controller {
   }
 
   private throwStateError(key: string, state: Data) {
-    invariant(!is.data(state), `${key} value should be a state object`);
+    throwError(!is.data(state), `${key} value should be a state object`);
   }
 
   private processPartitions() {

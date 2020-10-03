@@ -1,19 +1,18 @@
 import Controller from "./Controller";
-import type { Block, KeyedData, Options } from "./types";
-import { invariant, query } from "./utils";
+import type { Block } from "./types";
 import useData from "./useData";
+import { throwError, query, queryAll } from "./utils";
 
 export function register(block: Block, domNode: string | HTMLElement) {
   const element = query(domNode);
 
-  invariant(!element, `element with selector ${domNode} not found`);
+  throwError(!element, `element with selector ${domNode} not found`);
 
   const controller = new Controller(element, block);
   controller.init();
+
+  return () => controller.destroy();
 }
 
-export function map(data: KeyedData) {}
-
 export type { Block };
-
-export { useData };
+export { query, queryAll, useData };
