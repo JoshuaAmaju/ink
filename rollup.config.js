@@ -11,11 +11,10 @@ export default {
       file: pkg.main,
     },
     {
-      format: "umd",
+      format: "iife",
       name: pkg.name,
       file: pkg.browser,
     },
   ],
   plugins: [typescript(), terser(), uglify()],
-  external: [...Object.keys(JSON.parse(pkg.devDependencies))],
 };

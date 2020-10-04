@@ -3,7 +3,7 @@ import { Props } from "./types";
 export default class Data<T extends Props = {}> {
   protected prev: T;
   protected state: T;
-  private raf: number;
+  private raf?: number;
   private listeners: VoidFunction[] = [];
 
   constructor(value: T) {
