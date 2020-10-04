@@ -1,6 +1,8 @@
+import { KeyedData } from "./types";
 import Data from "./Data";
 
 export function toKebabCase(str: string) {
+  // @ts-ignore
   return str
     .match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
     .map((x) => x.toLowerCase())
@@ -23,7 +25,7 @@ export const is = {
   },
 };
 
-export function query(selector: string | HTMLElement): HTMLElement {
+export function query(selector: string | HTMLElement): HTMLElement | null {
   return typeof selector === "string"
     ? document.querySelector(selector)
     : selector;
@@ -35,4 +37,12 @@ export function queryAll<T extends HTMLElement>(selector: string): T[] {
 
 export function throwError(cond: boolean, msg: string) {
   if (cond) throw msg;
+}
+
+export function watch({ key, state }: KeyedData, callback: VoidFunction) {
+  state.subscribe(() => {
+    const value = (state.get() as any)[key];
+    const prevValue = (state.getPrev() as any)[key];
+    if (value !== prevValue) callback();
+  });
 }

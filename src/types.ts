@@ -4,9 +4,9 @@ export type Props<T = unknown> = Record<string, T>;
 
 export type Events = Props<any>;
 
-export type KeyedData = {
-  state: Data;
+export type KeyedData<T extends Props = {}> = {
   key: string;
+  state: Data<T>;
 };
 
 export type Properties<T = KeyedData> = {

@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "outDir": "dist",
+    "target": "es2015",
+    "module": "commonjs",
+    "declaration": true,
+    "noEmitOnError": true,
+    "noImplicitAny": true,
+    "importHelpers": true,
+    "noImplicitThis": true,
+    "removeComments": true,
+    "declarationMap": true,
+    "moduleResolution": "node",
+    "lib": ["es2017", "DOM", "ES2015.Proxy"],
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}

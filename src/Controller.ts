@@ -13,9 +13,9 @@ function get(value: any, key: string) {
 }
 
 function partition(_props: Partial<Properties>): Partitions {
-  const data = {};
-  const props = {};
-  const events = {};
+  const data = {} as any;
+  const props = {} as any;
+  const events = {} as any;
 
   for (const key in _props) {
     const value = _props[key];
@@ -34,9 +34,9 @@ function partition(_props: Partial<Properties>): Partitions {
 }
 
 export default class Controller {
-  private partitions: Partitions;
-  private disconnectCallback: VoidFunction;
-  private mutationObserver: MutationObserver;
+  private partitions?: Partitions;
+  private disconnectCallback?: VoidFunction;
+  private mutationObserver?: MutationObserver;
   private subscriptions: ReturnType<Data["subscribe"]>[] = [];
 
   constructor(
@@ -44,50 +44,22 @@ export default class Controller {
     private readonly block: Block
   ) {}
 
-  init() {
-    const props = this.block(this.getAttributes());
-    this.partitions = partition(props);
-    this.processPartitions();
-
-    const callback = this.block.connected?.();
-
-    if (callback) this.disconnectCallback = callback;
-
-    this.mutationObserver = new MutationObserver(this.observer);
-
-    this.mutationObserver.observe(this.domNode.parentNode, {
-      childList: true,
-    });
-  }
-
   private getAttributes(): Props<string> {
     const props = {};
     const attrs = this.domNode.attributes;
 
     for (let i = 0; i < attrs.length; i++) {
       const { name, value } = attrs[i];
-      props[toCamelCase(name)] = value;
+      (props as any)[toCamelCase(name)] = value;
     }
 
     return props;
   }
 
-  private setValue(value: any) {
-    if (is.input(this.domNode)) {
-      this.domNode.value = value;
-    } else {
-      this.domNode.textContent = value;
-    }
-  }
-
-  private throwStateError(key: string, state: Data) {
-    throwError(!is.data(state), `${key} value should be a state object`);
-  }
-
   private processPartitions() {
-    const { data, props, events } = this.partitions;
+    const { data, props, events } = this.partitions ?? {};
 
-    const { value, style, class: className, ...restProps } = props;
+    const { value, style, class: className, ...restProps } = props ?? {};
 
     if (value) {
       const { key, state } = value;
@@ -117,13 +89,13 @@ export default class Controller {
 
     if (style) {
       for (const key in style) {
-        const { key: _key, state } = style[key];
+        const { key: _key, state } = (style as any)[key];
 
         this.throwStateError(key, state);
 
         const subscription = state.subscribe(() => {
           const value = get(state.get(), _key);
-          this.domNode.style[key] = value;
+          this.domNode.style[key as any] = value;
         });
 
         this.subscriptions.push(subscription);
@@ -152,19 +124,6 @@ export default class Controller {
     }
   }
 
-  destroy() {
-    this.subscriptions.forEach((sub) => {
-      sub.unsubscribe();
-    });
-
-    this.partitions = null;
-    this.subscriptions = null;
-
-    this.block.disconnected?.();
-    this.disconnectCallback?.();
-    this.mutationObserver.disconnect();
-  }
-
   private observer = (records: MutationRecord[]) => {
     for (const record of records) {
       record.removedNodes.forEach((node) => {
@@ -174,4 +133,47 @@ export default class Controller {
       });
     }
   };
+
+  init() {
+    const props = this.block(this.getAttributes());
+    this.partitions = partition(props);
+    this.processPartitions();
+
+    const callback = this.block.connected?.();
+
+    if (callback) this.disconnectCallback = callback;
+
+    this.mutationObserver = new MutationObserver(this.observer);
+
+    this.mutationObserver.observe(this.domNode.parentNode as Node, {
+      childList: true,
+    });
+  }
+
+  private setValue(value: any) {
+    if (is.input(this.domNode)) {
+      this.domNode.value = value;
+    } else {
+      this.domNode.textContent = value;
+    }
+  }
+
+  private throwStateError(key: string, state: Data) {
+    throwError(!is.data(state), `${key} value should be a state object`);
+  }
+
+  destroy() {
+    this.subscriptions.forEach((sub) => {
+      sub.unsubscribe();
+    });
+
+    this.block.disconnected?.();
+    this.disconnectCallback?.();
+    this.mutationObserver?.disconnect();
+
+    this.partitions = undefined;
+    this.mutationObserver = undefined;
+    this.disconnectCallback = undefined;
+    this.subscriptions = undefined as any;
+  }
 }

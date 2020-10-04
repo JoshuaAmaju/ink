@@ -117,17 +117,79 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"../src/Data.ts":[function(require,module,exports) {
+})({"../node_modules/tslib/tslib.es6.js":[function(require,module,exports) {
 "use strict";
 
-var __assign = this && this.__assign || function () {
-  __assign = Object.assign || function (t) {
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.__extends = __extends;
+exports.__rest = __rest;
+exports.__decorate = __decorate;
+exports.__param = __param;
+exports.__metadata = __metadata;
+exports.__awaiter = __awaiter;
+exports.__generator = __generator;
+exports.__exportStar = __exportStar;
+exports.__values = __values;
+exports.__read = __read;
+exports.__spread = __spread;
+exports.__spreadArrays = __spreadArrays;
+exports.__await = __await;
+exports.__asyncGenerator = __asyncGenerator;
+exports.__asyncDelegator = __asyncDelegator;
+exports.__asyncValues = __asyncValues;
+exports.__makeTemplateObject = __makeTemplateObject;
+exports.__importStar = __importStar;
+exports.__importDefault = __importDefault;
+exports.__classPrivateFieldGet = __classPrivateFieldGet;
+exports.__classPrivateFieldSet = __classPrivateFieldSet;
+exports.__createBinding = exports.__assign = void 0;
+
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+
+/* global Reflect, Promise */
+var extendStatics = function (d, b) {
+  extendStatics = Object.setPrototypeOf || {
+    __proto__: []
+  } instanceof Array && function (d, b) {
+    d.__proto__ = b;
+  } || function (d, b) {
+    for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
+  };
+
+  return extendStatics(d, b);
+};
+
+function __extends(d, b) {
+  extendStatics(d, b);
+
+  function __() {
+    this.constructor = d;
+  }
+
+  d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+}
+
+var __assign = function () {
+  exports.__assign = __assign = Object.assign || function __assign(t) {
     for (var s, i = 1, n = arguments.length; i < n; i++) {
       s = arguments[i];
 
-      for (var p in s) {
-        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-      }
+      for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
     }
 
     return t;
@@ -136,15 +198,418 @@ var __assign = this && this.__assign || function () {
   return __assign.apply(this, arguments);
 };
 
+exports.__assign = __assign;
+
+function __rest(s, e) {
+  var t = {};
+
+  for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+
+  if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+  }
+  return t;
+}
+
+function __decorate(decorators, target, key, desc) {
+  var c = arguments.length,
+      r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc,
+      d;
+  if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+  return c > 3 && r && Object.defineProperty(target, key, r), r;
+}
+
+function __param(paramIndex, decorator) {
+  return function (target, key) {
+    decorator(target, key, paramIndex);
+  };
+}
+
+function __metadata(metadataKey, metadataValue) {
+  if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
+}
+
+function __awaiter(thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+}
+
+function __generator(thisArg, body) {
+  var _ = {
+    label: 0,
+    sent: function () {
+      if (t[0] & 1) throw t[1];
+      return t[1];
+    },
+    trys: [],
+    ops: []
+  },
+      f,
+      y,
+      t,
+      g;
+  return g = {
+    next: verb(0),
+    "throw": verb(1),
+    "return": verb(2)
+  }, typeof Symbol === "function" && (g[Symbol.iterator] = function () {
+    return this;
+  }), g;
+
+  function verb(n) {
+    return function (v) {
+      return step([n, v]);
+    };
+  }
+
+  function step(op) {
+    if (f) throw new TypeError("Generator is already executing.");
+
+    while (_) try {
+      if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+      if (y = 0, t) op = [op[0] & 2, t.value];
+
+      switch (op[0]) {
+        case 0:
+        case 1:
+          t = op;
+          break;
+
+        case 4:
+          _.label++;
+          return {
+            value: op[1],
+            done: false
+          };
+
+        case 5:
+          _.label++;
+          y = op[1];
+          op = [0];
+          continue;
+
+        case 7:
+          op = _.ops.pop();
+
+          _.trys.pop();
+
+          continue;
+
+        default:
+          if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+            _ = 0;
+            continue;
+          }
+
+          if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
+            _.label = op[1];
+            break;
+          }
+
+          if (op[0] === 6 && _.label < t[1]) {
+            _.label = t[1];
+            t = op;
+            break;
+          }
+
+          if (t && _.label < t[2]) {
+            _.label = t[2];
+
+            _.ops.push(op);
+
+            break;
+          }
+
+          if (t[2]) _.ops.pop();
+
+          _.trys.pop();
+
+          continue;
+      }
+
+      op = body.call(thisArg, _);
+    } catch (e) {
+      op = [6, e];
+      y = 0;
+    } finally {
+      f = t = 0;
+    }
+
+    if (op[0] & 5) throw op[1];
+    return {
+      value: op[0] ? op[1] : void 0,
+      done: true
+    };
+  }
+}
+
+var __createBinding = Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function () {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+};
+
+exports.__createBinding = __createBinding;
+
+function __exportStar(m, o) {
+  for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(o, p)) __createBinding(o, m, p);
+}
+
+function __values(o) {
+  var s = typeof Symbol === "function" && Symbol.iterator,
+      m = s && o[s],
+      i = 0;
+  if (m) return m.call(o);
+  if (o && typeof o.length === "number") return {
+    next: function () {
+      if (o && i >= o.length) o = void 0;
+      return {
+        value: o && o[i++],
+        done: !o
+      };
+    }
+  };
+  throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+}
+
+function __read(o, n) {
+  var m = typeof Symbol === "function" && o[Symbol.iterator];
+  if (!m) return o;
+  var i = m.call(o),
+      r,
+      ar = [],
+      e;
+
+  try {
+    while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+  } catch (error) {
+    e = {
+      error: error
+    };
+  } finally {
+    try {
+      if (r && !r.done && (m = i["return"])) m.call(i);
+    } finally {
+      if (e) throw e.error;
+    }
+  }
+
+  return ar;
+}
+
+function __spread() {
+  for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
+
+  return ar;
+}
+
+function __spreadArrays() {
+  for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+
+  for (var r = Array(s), k = 0, i = 0; i < il; i++) for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++) r[k] = a[j];
+
+  return r;
+}
+
+;
+
+function __await(v) {
+  return this instanceof __await ? (this.v = v, this) : new __await(v);
+}
+
+function __asyncGenerator(thisArg, _arguments, generator) {
+  if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+  var g = generator.apply(thisArg, _arguments || []),
+      i,
+      q = [];
+  return i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () {
+    return this;
+  }, i;
+
+  function verb(n) {
+    if (g[n]) i[n] = function (v) {
+      return new Promise(function (a, b) {
+        q.push([n, v, a, b]) > 1 || resume(n, v);
+      });
+    };
+  }
+
+  function resume(n, v) {
+    try {
+      step(g[n](v));
+    } catch (e) {
+      settle(q[0][3], e);
+    }
+  }
+
+  function step(r) {
+    r.value instanceof __await ? Promise.resolve(r.value.v).then(fulfill, reject) : settle(q[0][2], r);
+  }
+
+  function fulfill(value) {
+    resume("next", value);
+  }
+
+  function reject(value) {
+    resume("throw", value);
+  }
+
+  function settle(f, v) {
+    if (f(v), q.shift(), q.length) resume(q[0][0], q[0][1]);
+  }
+}
+
+function __asyncDelegator(o) {
+  var i, p;
+  return i = {}, verb("next"), verb("throw", function (e) {
+    throw e;
+  }), verb("return"), i[Symbol.iterator] = function () {
+    return this;
+  }, i;
+
+  function verb(n, f) {
+    i[n] = o[n] ? function (v) {
+      return (p = !p) ? {
+        value: __await(o[n](v)),
+        done: n === "return"
+      } : f ? f(v) : v;
+    } : f;
+  }
+}
+
+function __asyncValues(o) {
+  if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+  var m = o[Symbol.asyncIterator],
+      i;
+  return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () {
+    return this;
+  }, i);
+
+  function verb(n) {
+    i[n] = o[n] && function (v) {
+      return new Promise(function (resolve, reject) {
+        v = o[n](v), settle(resolve, reject, v.done, v.value);
+      });
+    };
+  }
+
+  function settle(resolve, reject, d, v) {
+    Promise.resolve(v).then(function (v) {
+      resolve({
+        value: v,
+        done: d
+      });
+    }, reject);
+  }
+}
+
+function __makeTemplateObject(cooked, raw) {
+  if (Object.defineProperty) {
+    Object.defineProperty(cooked, "raw", {
+      value: raw
+    });
+  } else {
+    cooked.raw = raw;
+  }
+
+  return cooked;
+}
+
+;
+
+var __setModuleDefault = Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+};
+
+function __importStar(mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+
+  __setModuleDefault(result, mod);
+
+  return result;
+}
+
+function __importDefault(mod) {
+  return mod && mod.__esModule ? mod : {
+    default: mod
+  };
+}
+
+function __classPrivateFieldGet(receiver, privateMap) {
+  if (!privateMap.has(receiver)) {
+    throw new TypeError("attempted to get private field on non-instance");
+  }
+
+  return privateMap.get(receiver);
+}
+
+function __classPrivateFieldSet(receiver, privateMap, value) {
+  if (!privateMap.has(receiver)) {
+    throw new TypeError("attempted to set private field on non-instance");
+  }
+
+  privateMap.set(receiver, value);
+  return value;
+}
+},{}],"../src/Data.ts":[function(require,module,exports) {
+"use strict";
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var Data =
-/** @class */
-function () {
+var Data = /*#__PURE__*/function () {
   function Data(value) {
     var _this = this;
+
+    _classCallCheck(this, Data);
 
     this.listeners = [];
 
@@ -154,7 +619,7 @@ function () {
       });
     };
 
-    this.prev = __assign({}, value);
+    this.prev = Object.assign({}, value);
     this.state = new Proxy(value, {
       get: function get(target, prop) {
         return target[prop];
@@ -162,7 +627,7 @@ function () {
       set: function set(target, prop, value) {
         var key = prop;
         if (value === target[key]) return true;
-        _this.prev = __assign({}, target);
+        _this.prev = Object.assign({}, target);
         target[key] = value;
 
         _this.notify();
@@ -172,37 +637,44 @@ function () {
     });
   }
 
-  Data.prototype.get = function () {
-    return this.state;
-  };
+  _createClass(Data, [{
+    key: "get",
+    value: function get() {
+      return this.state;
+    }
+  }, {
+    key: "getPrev",
+    value: function getPrev() {
+      return this.prev;
+    }
+  }, {
+    key: "set",
+    value: function set(value) {
+      this.prev = Object.assign({}, this.state);
+      this.state = value;
+      this.notify();
+    }
+  }, {
+    key: "notify",
+    value: function notify() {
+      if (this.raf) cancelAnimationFrame(this.raf);
+      this.raf = requestAnimationFrame(this.notifyListeners);
+    }
+  }, {
+    key: "subscribe",
+    value: function subscribe(callback) {
+      var _this2 = this;
 
-  Data.prototype.getPrev = function () {
-    return this.prev;
-  };
-
-  Data.prototype.set = function (value) {
-    this.prev = __assign({}, this.state);
-    this.state = value;
-    this.notify();
-  };
-
-  Data.prototype.notify = function () {
-    if (this.raf) cancelAnimationFrame(this.raf);
-    this.raf = requestAnimationFrame(this.notifyListeners);
-  };
-
-  Data.prototype.subscribe = function (callback) {
-    var _this = this;
-
-    this.listeners.push(callback);
-    return {
-      unsubscribe: function unsubscribe() {
-        _this.listeners = _this.listeners.filter(function (fn) {
-          return fn !== callback;
-        });
-      }
-    };
-  };
+      this.listeners.push(callback);
+      return {
+        unsubscribe: function unsubscribe() {
+          _this2.listeners = _this2.listeners.filter(function (fn) {
+            return fn !== callback;
+          });
+        }
+      };
+    }
+  }]);
 
   return Data;
 }();
@@ -211,18 +683,14 @@ exports.default = Data;
 },{}],"../src/utils.ts":[function(require,module,exports) {
 "use strict";
 
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.throwError = exports.queryAll = exports.query = exports.is = exports.toCamelCase = exports.toKebabCase = void 0;
+exports.watch = exports.throwError = exports.queryAll = exports.query = exports.is = exports.toCamelCase = exports.toKebabCase = void 0;
 
-var Data_1 = __importDefault(require("./Data"));
+var tslib_1 = require("tslib");
+
+var Data_1 = tslib_1.__importDefault(require("./Data"));
 
 function toKebabCase(str) {
   return str.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g).map(function (x) {
@@ -268,41 +736,38 @@ function throwError(cond, msg) {
 }
 
 exports.throwError = throwError;
-},{"./Data":"../src/Data.ts"}],"../src/Controller.ts":[function(require,module,exports) {
+
+function watch(_ref, callback) {
+  var key = _ref.key,
+      state = _ref.state;
+  state.subscribe(function () {
+    var value = state.get()[key];
+    var prevValue = state.getPrev()[key];
+    if (value !== prevValue) callback();
+  });
+}
+
+exports.watch = watch;
+},{"tslib":"../node_modules/tslib/tslib.es6.js","./Data":"../src/Data.ts"}],"../src/Controller.ts":[function(require,module,exports) {
 "use strict";
 
-var __assign = this && this.__assign || function () {
-  __assign = Object.assign || function (t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-      s = arguments[i];
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
-      for (var p in s) {
-        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-      }
-    }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
-    return t;
-  };
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-  return __assign.apply(this, arguments);
-};
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var __rest = this && this.__rest || function (s, e) {
-  var t = {};
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-  for (var p in s) {
-    if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
-  }
-
-  if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
-  }
-  return t;
-};
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var tslib_1 = require("tslib");
 
 var utils_1 = require("./utils");
 
@@ -335,185 +800,207 @@ function partition(_props) {
   };
 }
 
-var Controller =
-/** @class */
-function () {
+var Controller = /*#__PURE__*/function () {
   function Controller(domNode, block) {
     var _this = this;
+
+    _classCallCheck(this, Controller);
 
     this.domNode = domNode;
     this.block = block;
     this.subscriptions = [];
 
     this.observer = function (records) {
-      for (var _i = 0, records_1 = records; _i < records_1.length; _i++) {
-        var record = records_1[_i];
-        record.removedNodes.forEach(function (node) {
-          if (node === _this.domNode) {
-            _this.destroy();
-          }
-        });
+      var _iterator = _createForOfIteratorHelper(records),
+          _step;
+
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var record = _step.value;
+          record.removedNodes.forEach(function (node) {
+            if (node === _this.domNode) {
+              _this.destroy();
+            }
+          });
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
       }
     };
   }
 
-  Controller.prototype.init = function () {
-    var _a, _b;
+  _createClass(Controller, [{
+    key: "getAttributes",
+    value: function getAttributes() {
+      var props = {};
+      var attrs = this.domNode.attributes;
 
-    var props = this.block(this.getAttributes());
-    this.partitions = partition(props);
-    this.processPartitions();
-    var callback = (_b = (_a = this.block).connected) === null || _b === void 0 ? void 0 : _b.call(_a);
-    if (callback) this.disconnectCallback = callback;
-    this.mutationObserver = new MutationObserver(this.observer);
-    this.mutationObserver.observe(this.domNode.parentNode, {
-      childList: true
-    });
-  };
+      for (var i = 0; i < attrs.length; i++) {
+        var _attrs$i = attrs[i],
+            name = _attrs$i.name,
+            value = _attrs$i.value;
+        props[utils_1.toCamelCase(name)] = value;
+      }
 
-  Controller.prototype.getAttributes = function () {
-    var props = {};
-    var attrs = this.domNode.attributes;
-
-    for (var i = 0; i < attrs.length; i++) {
-      var _a = attrs[i],
-          name = _a.name,
-          value = _a.value;
-      props[utils_1.toCamelCase(name)] = value;
+      return props;
     }
+  }, {
+    key: "processPartitions",
+    value: function processPartitions() {
+      var _this2 = this;
 
-    return props;
-  };
+      var _a;
 
-  Controller.prototype.setValue = function (value) {
-    if (utils_1.is.input(this.domNode)) {
-      this.domNode.value = value;
-    } else {
-      this.domNode.textContent = value;
-    }
-  };
+      var _ref = (_a = this.partitions) !== null && _a !== void 0 ? _a : {},
+          data = _ref.data,
+          props = _ref.props,
+          events = _ref.events;
 
-  Controller.prototype.throwStateError = function (key, state) {
-    utils_1.throwError(!utils_1.is.data(state), key + " value should be a state object");
-  };
+      var _b = props !== null && props !== void 0 ? props : {},
+          value = _b.value,
+          style = _b.style,
+          className = _b.class,
+          restProps = tslib_1.__rest(_b, ["value", "style", "class"]);
 
-  Controller.prototype.processPartitions = function () {
-    var _this = this;
-
-    var _a = this.partitions,
-        data = _a.data,
-        props = _a.props,
-        events = _a.events;
-
-    var value = props.value,
-        style = props.style,
-        className = props.class,
-        restProps = __rest(props, ["value", "style", "class"]);
-
-    if (value) {
-      var key_1 = value.key,
-          state_1 = value.state;
-      this.throwStateError(key_1, state_1);
-      var subscription = state_1.subscribe(function () {
-        _this.setValue(get(state_1.get(), key_1));
-      });
-      this.subscriptions.push(subscription);
-    }
-
-    if (className) {
-      var key_2 = className.key,
-          state_2 = className.state;
-      this.throwStateError(key_2, state_2);
-      var subscription = state_2.subscribe(function () {
-        var value = get(state_2.get(), key_2);
-        var prevValue = get(state_2.getPrev(), key_2);
-
-        _this.domNode.classList.remove(prevValue);
-
-        if (value) _this.domNode.classList.add(value);
-      });
-      this.subscriptions.push(subscription);
-    }
-
-    if (style) {
-      var _loop_1 = function _loop_1(key) {
-        var _a = style[key],
-            _key = _a.key,
-            state = _a.state;
-        this_1.throwStateError(key, state);
+      if (value) {
+        var key = value.key,
+            state = value.state;
+        this.throwStateError(key, state);
         var subscription = state.subscribe(function () {
-          var value = get(state.get(), _key);
-          _this.domNode.style[key] = value;
+          _this2.setValue(get(state.get(), key));
         });
-        this_1.subscriptions.push(subscription);
-      };
+        this.subscriptions.push(subscription);
+      }
 
-      var this_1 = this;
+      if (className) {
+        var _key2 = className.key,
+            _state = className.state;
+        this.throwStateError(_key2, _state);
 
-      for (var key in style) {
-        _loop_1(key);
+        var _subscription = _state.subscribe(function () {
+          var value = get(_state.get(), _key2);
+          var prevValue = get(_state.getPrev(), _key2);
+
+          _this2.domNode.classList.remove(prevValue);
+
+          if (value) _this2.domNode.classList.add(value);
+        });
+
+        this.subscriptions.push(_subscription);
+      }
+
+      if (style) {
+        var _loop = function _loop(_key3) {
+          var _style$_key = style[_key3],
+              _key = _style$_key.key,
+              state = _style$_key.state;
+
+          _this2.throwStateError(_key3, state);
+
+          var subscription = state.subscribe(function () {
+            var value = get(state.get(), _key);
+            _this2.domNode.style[_key3] = value;
+          });
+
+          _this2.subscriptions.push(subscription);
+        };
+
+        for (var _key3 in style) {
+          _loop(_key3);
+        }
+      }
+
+      var _props = Object.assign(Object.assign({}, data), restProps);
+
+      if (_props) {
+        var _loop2 = function _loop2(_key4) {
+          var _props$_key = _props[_key4],
+              _key = _props$_key.key,
+              state = _props$_key.state;
+
+          _this2.throwStateError(_key4, state);
+
+          var subscription = state.subscribe(function () {
+            var value = get(state.get(), _key);
+
+            _this2.domNode.setAttribute(_key4, value);
+          });
+
+          _this2.subscriptions.push(subscription);
+        };
+
+        for (var _key4 in _props) {
+          _loop2(_key4);
+        }
+      }
+
+      for (var _key5 in events) {
+        this.domNode.addEventListener(_key5, events[_key5]);
       }
     }
+  }, {
+    key: "init",
+    value: function init() {
+      var _a, _b;
 
-    var _props = __assign(__assign({}, data), restProps);
-
-    if (_props) {
-      var _loop_2 = function _loop_2(key) {
-        var _a = _props[key],
-            _key = _a.key,
-            state = _a.state;
-        this_2.throwStateError(key, state);
-        var subscription = state.subscribe(function () {
-          var value = get(state.get(), _key);
-
-          _this.domNode.setAttribute(key, value);
-        });
-        this_2.subscriptions.push(subscription);
-      };
-
-      var this_2 = this;
-
-      for (var key in _props) {
-        _loop_2(key);
+      var props = this.block(this.getAttributes());
+      this.partitions = partition(props);
+      this.processPartitions();
+      var callback = (_b = (_a = this.block).connected) === null || _b === void 0 ? void 0 : _b.call(_a);
+      if (callback) this.disconnectCallback = callback;
+      this.mutationObserver = new MutationObserver(this.observer);
+      this.mutationObserver.observe(this.domNode.parentNode, {
+        childList: true
+      });
+    }
+  }, {
+    key: "setValue",
+    value: function setValue(value) {
+      if (utils_1.is.input(this.domNode)) {
+        this.domNode.value = value;
+      } else {
+        this.domNode.textContent = value;
       }
     }
-
-    for (var key in events) {
-      this.domNode.addEventListener(key, events[key]);
+  }, {
+    key: "throwStateError",
+    value: function throwStateError(key, state) {
+      utils_1.throwError(!utils_1.is.data(state), "".concat(key, " value should be a state object"));
     }
-  };
+  }, {
+    key: "destroy",
+    value: function destroy() {
+      var _a, _b, _c, _d;
 
-  Controller.prototype.destroy = function () {
-    var _a, _b, _c;
-
-    this.subscriptions.forEach(function (sub) {
-      sub.unsubscribe();
-    });
-    this.partitions = null;
-    this.subscriptions = null;
-    (_b = (_a = this.block).disconnected) === null || _b === void 0 ? void 0 : _b.call(_a);
-    (_c = this.disconnectCallback) === null || _c === void 0 ? void 0 : _c.call(this);
-    this.mutationObserver.disconnect();
-  };
+      this.subscriptions.forEach(function (sub) {
+        sub.unsubscribe();
+      });
+      (_b = (_a = this.block).disconnected) === null || _b === void 0 ? void 0 : _b.call(_a);
+      (_c = this.disconnectCallback) === null || _c === void 0 ? void 0 : _c.call(this);
+      (_d = this.mutationObserver) === null || _d === void 0 ? void 0 : _d.disconnect();
+      this.partitions = undefined;
+      this.mutationObserver = undefined;
+      this.disconnectCallback = undefined;
+      this.subscriptions = undefined;
+    }
+  }]);
 
   return Controller;
 }();
 
 exports.default = Controller;
-},{"./utils":"../src/utils.ts"}],"../src/useData.ts":[function(require,module,exports) {
+},{"tslib":"../node_modules/tslib/tslib.es6.js","./utils":"../src/utils.ts"}],"../src/useData.ts":[function(require,module,exports) {
 "use strict";
-
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var Data_1 = __importDefault(require("./Data"));
+var tslib_1 = require("tslib");
+
+var Data_1 = tslib_1.__importDefault(require("./Data"));
 
 function useData(state) {
   var get = {};
@@ -525,31 +1012,6 @@ function useData(state) {
     for (var key in state) {
       _state[key] = _state[key];
     }
-  };
-
-  var map = function map(_a, callback) {
-    var key = _a.key,
-        state = _a.state;
-    var fauxState = new Data_1.default(_state);
-    Object.defineProperties(fauxState, {
-      get: {
-        value: function value() {
-          return callback(state.get()[key]);
-        }
-      },
-      getPrev: {
-        value: function value() {
-          return callback(state.getPrev()[key]);
-        }
-      }
-    });
-    state.subscribe(function () {
-      fauxState.set(state.get());
-    });
-    return {
-      key: key,
-      state: fauxState
-    };
   };
 
   for (var key in state) {
@@ -566,7 +1028,6 @@ function useData(state) {
 
   return {
     get: get,
-    map: map,
     data: data,
     state: _state,
     forceUpdate: forceUpdate
@@ -574,23 +1035,21 @@ function useData(state) {
 }
 
 exports.default = useData;
-},{"./Data":"../src/Data.ts"}],"../src/index.ts":[function(require,module,exports) {
+},{"tslib":"../node_modules/tslib/tslib.es6.js","./Data":"../src/Data.ts"}],"../src/index.ts":[function(require,module,exports) {
 "use strict";
-
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.useData = exports.queryAll = exports.query = exports.register = void 0;
+exports.watch = exports.useData = exports.queryAll = exports.query = exports.map = exports.register = void 0;
 
-var Controller_1 = __importDefault(require("./Controller"));
+var tslib_1 = require("tslib");
 
-var useData_1 = __importDefault(require("./useData"));
+var Controller_1 = tslib_1.__importDefault(require("./Controller"));
+
+var Data_1 = tslib_1.__importDefault(require("./Data"));
+
+var useData_1 = tslib_1.__importDefault(require("./useData"));
 
 exports.useData = useData_1.default;
 
@@ -608,10 +1067,16 @@ Object.defineProperty(exports, "queryAll", {
     return utils_1.queryAll;
   }
 });
+Object.defineProperty(exports, "watch", {
+  enumerable: true,
+  get: function get() {
+    return utils_1.watch;
+  }
+});
 
 function register(block, domNode) {
   var element = utils_1.query(domNode);
-  utils_1.throwError(!element, "element with selector " + domNode + " not found");
+  utils_1.throwError(!element, "element with selector ".concat(domNode, " not found"));
   var controller = new Controller_1.default(element, block);
   controller.init();
   return function () {
@@ -620,7 +1085,34 @@ function register(block, domNode) {
 }
 
 exports.register = register;
-},{"./Controller":"../src/Controller.ts","./useData":"../src/useData.ts","./utils":"../src/utils.ts"}],"index.ts":[function(require,module,exports) {
+
+function map(_ref, callback) {
+  var key = _ref.key,
+      state = _ref.state;
+  var fauxState = new Data_1.default(state.get());
+  Object.defineProperties(fauxState, {
+    get: {
+      value: function value() {
+        return callback(state.get()[key]);
+      }
+    },
+    getPrev: {
+      value: function value() {
+        return callback(state.getPrev()[key]);
+      }
+    }
+  });
+  state.subscribe(function () {
+    fauxState.set(state.get());
+  });
+  return {
+    key: key,
+    state: fauxState
+  };
+}
+
+exports.map = map;
+},{"tslib":"../node_modules/tslib/tslib.es6.js","./Controller":"../src/Controller.ts","./Data":"../src/Data.ts","./useData":"../src/useData.ts","./utils":"../src/utils.ts"}],"index.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -629,31 +1121,33 @@ Object.defineProperty(exports, "__esModule", {
 
 var src_1 = require("../src");
 
-var _a = src_1.useData({
-  radius: 10
+var _src_1$useData = src_1.useData({
+  radius: 10,
+  arr: [1, 2, 3]
 }),
-    map = _a.map,
-    state = _a.state,
-    radius = _a.get.radius;
+    state = _src_1$useData.state,
+    data = _src_1$useData.data,
+    radius = _src_1$useData.get.radius;
+
+data.subscribe(function () {
+  console.log(state.arr);
+});
 
 var Range = function Range() {
   return {
-    onChange: function onChange(_a) {
-      var target = _a.target;
+    onChange: function onChange(_ref) {
+      var target = _ref.target;
       var value = target.value;
-      state.radius = parseFloat(value);
+      var radius = parseFloat(value);
+      state.arr.push(radius);
+      state.radius = radius;
     }
   };
 };
 
 var Circle = function Circle() {
   return {
-    r: radius,
-    style: {
-      transform: map(radius, function (r) {
-        return "translateX(" + r + "px)";
-      })
-    }
+    cx: radius
   };
 };
 

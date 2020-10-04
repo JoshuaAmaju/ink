@@ -1,12 +1,11 @@
 import Data from "./Data";
 import { KeyedData, Props } from "./types";
 
-type UseData<T extends Props, P extends keyof T> = {
+export type UseData<T extends Props, P extends keyof T> = {
   state: T;
   data: Data<T>;
   forceUpdate: VoidFunction;
-  get: Record<P, KeyedData>;
-  map: (value: KeyedData, fn: (v: T[P]) => unknown) => KeyedData;
+  get: Record<P, KeyedData<T>>;
 };
 
 export default function useData<T extends Props, P extends keyof T>(
@@ -23,29 +22,6 @@ export default function useData<T extends Props, P extends keyof T>(
     }
   };
 
-  const map: UseData<T, P>["map"] = ({ key, state }, callback) => {
-    const fauxState = new Data(_state);
-
-    Object.defineProperties(fauxState, {
-      get: {
-        value() {
-          return callback(state.get()[key] as any);
-        },
-      },
-      getPrev: {
-        value() {
-          return callback(state.getPrev()[key] as any);
-        },
-      },
-    });
-
-    state.subscribe(() => {
-      fauxState.set(state.get() as any);
-    });
-
-    return { key, state: fauxState };
-  };
-
   for (const key in state) {
     Object.defineProperty(get, key, {
       value: {
@@ -58,5 +34,5 @@ export default function useData<T extends Props, P extends keyof T>(
     });
   }
 
-  return { get, map, data, state: _state, forceUpdate };
+  return { get, data, state: _state, forceUpdate };
 }

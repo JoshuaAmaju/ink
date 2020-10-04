@@ -1,28 +1,29 @@
-import { register, Block, useData } from "../src";
+import { map, register, Block, useData } from "../src";
 
 const {
-  map,
   state,
+  data,
   get: { radius },
-} = useData({ radius: 10 });
+} = useData({ radius: 10, arr: [1, 2, 3] });
+
+data.subscribe(() => {
+  console.log(state.arr);
+});
 
 const Range: Block = () => {
   return {
     onChange({ target }: Event) {
       const value = (target as HTMLInputElement).value;
-      state.radius = parseFloat(value);
+      const radius = parseFloat(value);
+      state.arr.push(radius);
+      state.radius = radius;
     },
   };
 };
 
 const Circle: Block = () => {
   return {
-    r: radius,
-    style: {
-      transform: map(radius, (r) => {
-        return `translateX(${r}px)`;
-      }),
-    },
+    cx: radius,
   };
 };
 
